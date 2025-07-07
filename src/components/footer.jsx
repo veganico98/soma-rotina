@@ -1,9 +1,9 @@
 import React from 'react'
 
-const footer = () => {
+const Footer = () => {
   return (
-    <div>footer</div>
+    <div className='bg-sky-950'>Footer</div>
   )
 }
 
-export default footer
+export default Footer

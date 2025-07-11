@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import rotina from './data/rotina.json'
 
@@ -10,7 +10,14 @@ import './App.css'
 
 function App() {
 
-  const [dados, setDados] = useState(rotina);
+  const [dados, setDados] = useState(() => {
+    const salvo = localStorage.getItem("rotinaDiaria");
+    return salvo ? JSON.parse(salvo) : rotina
+  });
+
+  useEffect(() => {
+    localStorage.setItem("rotinaEstudo", JSON.stringify(dados));
+  }, [dados]);
 
   return (
     <>

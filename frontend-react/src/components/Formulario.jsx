@@ -11,7 +11,7 @@ const Formulario = ({dados, setDados}) => {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen bg-indigo-900'>
+    <div className='flex flex-col items-center justify-center h-screen '>
       
         <form className='flex flex-col gap-4'>
 

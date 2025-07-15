@@ -11,15 +11,6 @@ const Formulario = ({dados, setDados}) => {
     }
 
     const enviarDados = async () => {
-    const dados = {
-      segunda: 45,
-      terca: 30,
-      quarta: 60,
-      quinta: 25,
-      sexta: 40,
-      sabado: 0,
-      domingo: 0
-    };
 
     const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
       method: 'POST',

@@ -2,19 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RotinaController;
 
-Route::post('/resultado', function (Request $request) {
-    $dados = $request->all();
-
-    $caminho = "rotina.json";
-
-    Storage::disk('local') -> put($caminho, json_encode($dados, JSON_PRETTY_PRINT));
-
-    return response()->json([
-        'mensagem' => 'Dados recebidos com sucesso!',
-        'dados' => $dados
-    ]);
-});
+Route::post('/resultado', [RotinaController::class, 'store']);
 
 Route::get('/rotina', function() {
     $path = storage_path('app/rotina.json');

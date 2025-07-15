@@ -9,7 +9,7 @@ class RotinaController extends Controller{
     public function store(Request $request){
         $dados = $request->all();
 
-        Storage::put('rotina.json', json_encode($dados, JSON_PRETTY_PRINT));
+        file_put_contents(storage_path('app/rotina.json'), json_encode($dados, JSON_PRETTY_PRINT));
 
         return response()->json([
             'mensagem' => 'Dados Salvos com sucesso no rotina.json',

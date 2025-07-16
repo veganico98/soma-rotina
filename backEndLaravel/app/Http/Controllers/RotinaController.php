@@ -16,4 +16,27 @@ class RotinaController extends Controller{
             'dados' => $dados
         ]);
     }
+
+    public function sum(){
+        $path = storage_path('app/rotina.json');
+
+        if(!file_exists($path)){
+            return response()->json(['erro'=>'Arquivo não encontrado'], 404);
+        }
+
+        $json = file_get_contents($path);
+        $dados = json_decode($json, true);
+
+        $soma = 0;
+
+        foreach($dados as $dia => $minutos){
+            $soma += is_numeric($minutos) ? $minutos : 0;
+        }
+
+        return response()->json([
+            'total_minutos' => $soma,
+            'horas' => floor($soma / 60),
+            'minutos_restantes' => $soma % 60
+        ]);
+    }
 }

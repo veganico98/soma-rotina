@@ -14,3 +14,5 @@ Route::get('/rotina', function() {
     $dados = json_decode(file_get_contents($path), true);
     return response()->json($dados);
 });
+
+Route::get('/resultado/soma', [RotinaController::class, 'sum']);

@@ -11,7 +11,7 @@ const Formulario = ({dados, setDados}) => {
       }))
     }
 
-    const enviarDados = async () => {
+  const enviarDados = async () => {
 
     const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
       method: 'POST',
@@ -24,6 +24,18 @@ const Formulario = ({dados, setDados}) => {
     const json = await resposta.json();
     console.log(json);
   };
+
+  const gerarSoma = async () => {
+    const resposta = await fetch('http://127.0.0.1:8000/api/resultado/soma',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      
+    })
+  }
+
+
 
   return (
     <div className='flex flex-col items-center justify-center h-screen '>
@@ -53,6 +65,8 @@ const Formulario = ({dados, setDados}) => {
               <input type='number' id='saturday' name="saturday" onChange={handleChange} value={dados.saturday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
               
               <button type="button" onClick={enviarDados} className="bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
+
+              <button type="button" className='bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800'>Gerar soma</button>
 
             </div>
         </form>

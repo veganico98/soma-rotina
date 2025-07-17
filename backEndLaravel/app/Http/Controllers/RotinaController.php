@@ -33,10 +33,14 @@ class RotinaController extends Controller{
             $soma += is_numeric($minutos) ? $minutos : 0;
         }
 
+        $totalMinutos = $soma;
+        $horas = floor($soma/60);
+        $minutosRestantes = $soma % 60;
+
         return response()->json([
-            'total_minutos' => $soma,
-            'horas' => floor($soma / 60),
-            'minutos_restantes' => $soma % 60
+            'total_minutos' => $totalMinutos,
+            'horas' => $horas,
+            'minutos_restantes' => $minutosRestantes
         ]);
     }
 }

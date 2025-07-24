@@ -79,16 +79,29 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
 
               <button type="button" onClick={gerarSoma} className='bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800'>Gerar soma</button>
 
-              {resultadoSoma && (
+              {resultadoSoma && resultadoSoma.total_minutos > 0 ? (
+
                 <div className='mt-4 p-4 bg-indigo-100 text-indigo-900 rounded shadow'>
                   <p><strong>Total em minutos: </strong>{resultadoSoma.total_minutos}</p>
+
                   <p><strong>Horas: </strong>{resultadoSoma.horas}</p>
-                  <p><strong>Minutos restantes: </strong>{resultadoSoma.minutos_restantes}</p>
+
+                  {resultadoSoma && resultadoSoma.horas > 0 ? (
+                    <p><strong>Minutos restantes: </strong>{resultadoSoma.minutos_restantes}</p>
+                  ) : (<p></p>)
+                }
+
                 </div>
-              )
-
+              ) : (
+                  <div className=' flex items-center'>
+                    <div className='mt-4 p-4'>
+                      <p className=' text-indigo-900 shadow'>
+                        Por favor, gere uma soma válida.
+                      </p>
+                    </div>
+                  </div>
+                )
               }
-
             </div>
         </form>
     </div>

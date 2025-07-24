@@ -43,4 +43,6 @@ class RotinaController extends Controller{
             'minutos_restantes' => $minutosRestantes
         ]);
     }
+
+    
 }

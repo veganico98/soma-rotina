@@ -20,6 +20,8 @@ function App() {
     return salvo ? JSON.parse(salvo) : rotinaInicial;
   });
 
+  const [resultadoSoma, setResultadoSoma] = useState(null);
+
   const rotinaInicial = {
     sunday: 0,
     monday: 0,
@@ -34,7 +36,11 @@ function App() {
   return (
     <>
       <Header />
-        <Formulario dados={dados} setDados={setDados}/>
+        <Formulario 
+              dados={dados} 
+              setDados={setDados} 
+              resultadoSoma={resultadoSoma}
+              setResultadoSoma={setResultadoSoma}/>          
       <Footer />
     </>
   )

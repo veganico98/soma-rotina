@@ -1,7 +1,7 @@
 
 import './Formulario.css'
 
-const Formulario = ({dados, setDados}) => {
+const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
 
   function handleChange(e) {
       const {name, value} = e.target;
@@ -10,7 +10,6 @@ const Formulario = ({dados, setDados}) => {
         [name]: Number(value)
       }))
     }
-
   const enviarDados = async () => {
 
     const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
@@ -37,13 +36,13 @@ const Formulario = ({dados, setDados}) => {
     if (!resposta.ok){
       throw new Error('Erro ao buscar soma');
     }
-    const json = await resposta.json();
-    console.log("Soma recebida: ", json);
-  } catch (error) {
-    console.error('Erro ao gerar soma: ', error);
-  }
-
-};
+      const soma = await resposta.json();
+      // console.log("Soma recebida: ", soma);
+      setResultadoSoma(soma);
+    } catch (error) {
+      console.error('Erro ao gerar soma: ', error);
+    }
+  };
 
   return (
     <div className='flex flex-col items-center justify-center h-screen '>
@@ -79,6 +78,16 @@ const Formulario = ({dados, setDados}) => {
               <button type="button" onClick={enviarDados} className="bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
 
               <button type="button" onClick={gerarSoma} className='bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800'>Gerar soma</button>
+
+              {resultadoSoma && (
+                <div className='mt-4 p-4 bg-indigo-100 text-indigo-900 rounded shadow'>
+                  <p><strong>Total em minutos: </strong>{resultadoSoma.total_minutos}</p>
+                  <p><strong>Horas: </strong>{resultadoSoma.horas}</p>
+                  <p><strong>Minutos restantes: </strong>{resultadoSoma.minutos_restantes}</p>
+                </div>
+              )
+
+              }
 
             </div>
         </form>

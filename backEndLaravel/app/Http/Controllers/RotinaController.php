@@ -44,5 +44,39 @@ class RotinaController extends Controller{
         ]);
     }
 
-    
+    public function exportMin()
+    {
+        $response = $this->sum();
+
+        if ($response->status() !== 200){
+            return $response;
+        }
+
+        $data = $response->getData(true);
+        $novoTotal = $data['total_minutos'] ?? 0;
+
+        $path = storage_path('app/semana.json');
+
+        $conteudo = [
+            "semana1" => [["totalMinutos" => ""]],
+            "semana2" => [["totalMinutos" => ""]]
+        ];
+
+        if(file_exists($path)){
+            $conteudo = json_decode(file_get_contents($path), true);
+        }
+
+        $conteudo['semana1'][0]['totalminutos'] = $conteudo['semana2'][0]['totalMinutos'] ?? "";
+
+        $conteudo['semana2'][0]['totalMinutos'] = $novoTotal;
+
+        file_put_contents($path, json_encode($conteudo, JSON_PRETTY_PRINT));
+
+        return response()->json([
+            'mensagem' => 'Exportação feita com sucesso!',
+            'conteudo' => $conteudo
+        ]);
+        
+    }
+
 }

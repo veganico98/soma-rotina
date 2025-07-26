@@ -8,8 +8,9 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
       setDados(prev => ({
         ...prev,
         [name]: Number(value)
-      }))
-    }
+    }))
+  }
+
   const enviarDados = async () => {
 
     const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
@@ -37,11 +38,21 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
       throw new Error('Erro ao buscar soma');
     }
       const soma = await resposta.json();
-      // console.log("Soma recebida: ", soma);
+      console.log("Soma recebida: ", soma);
       setResultadoSoma(soma);
+
+      const exportWeek = await fetch('http://127.0.0.1:8000/api/resultado/exportWeek',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({total_minutos: soma.total_minutos})
+      })
+
     } catch (error) {
       console.error('Erro ao gerar soma: ', error);
     }
+    
   };
 
   return (
@@ -82,14 +93,12 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
               {resultadoSoma && resultadoSoma.total_minutos > 0 ? (
 
                 <div className='mt-4 p-4 bg-indigo-100 text-indigo-900 rounded shadow'>
-                  <p><strong>Total em minutos: </strong>{resultadoSoma.total_minutos}</p>
-
-                  <p><strong>Horas: </strong>{resultadoSoma.horas}</p>
-
-                  {resultadoSoma && resultadoSoma.horas > 0 ? (
-                    <p><strong>Minutos restantes: </strong>{resultadoSoma.minutos_restantes}</p>
-                  ) : (<p></p>)
-                }
+                  <p><strong>Total em minutos: </strong>{resultadoSoma.total_minutos}min</p>
+                    <p className='flex flex-row'><strong>Horas: </strong>{resultadoSoma.horas} {resultadoSoma && resultadoSoma.minutos_restantes > 0 ? (
+                      <span>:{resultadoSoma.minutos_restantes}min</span>
+                        ) : (<span></span>)
+                      }
+                  </p>
 
                 </div>
               ) : (

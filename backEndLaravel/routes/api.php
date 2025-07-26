@@ -15,4 +15,6 @@ Route::get('/rotina', function() {
     return response()->json($dados);
 });
 
+Route::post('/resultado/exportWeek', [RotinaController::class, 'exportMin']);
+
 Route::get('/resultado/soma', [RotinaController::class, 'sum']);

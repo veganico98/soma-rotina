@@ -75,8 +75,19 @@ class RotinaController extends Controller{
         return response()->json([
             'mensagem' => 'Exportação feita com sucesso!',
             'conteudo' => $conteudo
-        ]);
-        
+        ]); 
+    }
+    public function getSemana(){
+        $path = storage_path('app/semana.json');
+
+        if (!file_exists($path)) {
+            return response()->json(['erro' => 'Arquivo semana.json não encontrado'], 404);
+        }
+
+        $json = file_get_contents($path);
+        $dados = json_decode($json, true);
+
+        return response()->json($dados);
     }
 
 }

@@ -32,6 +32,11 @@ function App() {
     saturday: 0
   };
 
+  const [dadosSemana, serDadosSemana] = useState(null);
+
+  const [totalSemana1, setTotalSemana1] = useState(0);
+  const [totalSemana2, setTotalSemana2] = useState(0);
+
 
   return (
     <>
@@ -40,7 +45,14 @@ function App() {
               dados={dados} 
               setDados={setDados} 
               resultadoSoma={resultadoSoma}
-              setResultadoSoma={setResultadoSoma}/>          
+              setResultadoSoma={setResultadoSoma}
+              dadosSemana={dadosSemana}
+              serDadosSemana={serDadosSemana}
+              totalSemana1={totalSemana1}
+              setTotalSemana1={setTotalSemana1}
+              totalSemana2={totalSemana2}
+              setTotalSemana2={setTotalSemana2}
+              />     
       <Footer />
     </>
   )

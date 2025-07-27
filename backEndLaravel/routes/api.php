@@ -17,4 +17,6 @@ Route::get('/rotina', function() {
 
 Route::post('/resultado/exportWeek', [RotinaController::class, 'exportMin']);
 
+Route::get('/resultado/semana', [RotinaController::class, 'getSemana']);
+
 Route::get('/resultado/soma', [RotinaController::class, 'sum']);

@@ -1,7 +1,7 @@
 
 import './Formulario.css'
 
-const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
+const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSemana, setDadosSemana, totalSemana1, setTotalSemana1, totalSemana2, setTotalSemana2}) => {
 
   function handleChange(e) {
       const {name, value} = e.target;
@@ -13,16 +13,17 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
 
   const enviarDados = async () => {
 
-    const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dados)
-    });
+  const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dados)
+  });
 
-    const json = await resposta.json();
-    console.log(json);
+  const json = await resposta.json();
+  console.log(json);
+
   };
 
   const gerarSoma = async () => {
@@ -52,7 +53,20 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma}) => {
     } catch (error) {
       console.error('Erro ao gerar soma: ', error);
     }
-    
+
+    const buscarSemana = async () => {
+      try {
+        const resposta = await fetch('http://127.0.0.1:8000/api/resultado/semana');
+        const json = await resposta.json();
+
+        setDadosSemana(json);
+
+        const semana1 = json.semana1?.[0]?.total_minutos || 0;
+        const semana2 = json.semana2?.[0]?.total_minutos || 0;
+      }catch (error) {
+        console.error('Erro ao buscar dados da semana:', error);
+      }
+    }
   };
 
   return (

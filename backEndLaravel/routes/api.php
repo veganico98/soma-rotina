@@ -20,3 +20,6 @@ Route::post('/resultado/exportWeek', [RotinaController::class, 'exportMin']);
 Route::get('/resultado/semana', [RotinaController::class, 'getSemana']);
 
 Route::get('/resultado/soma', [RotinaController::class, 'sum']);
+
+Route::get('/resultado/congrats', [RotinaController::class, 'congrats']);
+Route::get('/resultado/incentivo', [RotinaController::class, 'incentivo']);

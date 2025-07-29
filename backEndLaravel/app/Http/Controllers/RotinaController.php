@@ -44,8 +44,7 @@ class RotinaController extends Controller{
         ]);
     }
 
-    public function exportMin()
-    {
+    public function exportMin(){
         $response = $this->sum();
 
         if ($response->status() !== 200){
@@ -77,6 +76,7 @@ class RotinaController extends Controller{
             'conteudo' => $conteudo
         ]); 
     }
+    
     public function getSemana(){
         $path = storage_path('app/semana.json');
 
@@ -88,6 +88,44 @@ class RotinaController extends Controller{
         $dados = json_decode($json, true);
 
         return response()->json($dados);
+    }
+
+    public function congrats(){
+        $path = storage_path('app/frases.json');
+
+        if (!file_exists($path)) {
+            return response()->json(['erro' => 'Arquivo frases.json não encontrado'], 404);
+        }
+
+        $json = file_get_contents($path);
+        $frases = json_decode($json, true);
+
+        if (!isset($frases['parabenizacao']) || empty($frases['parabenizacao'])) {
+            return response()->json(['erro' => 'Nenhuma frase de parabenização encontrada'], 500);
+        }
+
+        $fraseAleatoria = $frases['parabenizacao'][array_rand($frases['parabenizacao'])];
+
+        return response()->json(['frase' => $fraseAleatoria]);
+    }
+
+    public function incentivo(){
+        $path = storage_path('app/frases.json');
+
+        if (!file_exists($path)) {
+            return response()->json(['erro' => 'Arquivo frases.json não encontrado'], 404);
+        }
+        
+        $json = file_get_contents($path);
+        $frases = json_decode($json, true);
+
+        if (!isset($frases['incentivo']) || empty($frases['incentivo'])) {
+            return response()->json(['erro' => 'Nenhuma frase de incentivo encontrada'], 500);
+        }
+
+        $fraseAleatoria = $frases['incentivo'][array_rand($frases['incentivo'])];
+
+        return response()->json(['frase' => $fraseAleatoria]);
     }
 
 }

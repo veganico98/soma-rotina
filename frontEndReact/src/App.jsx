@@ -33,7 +33,10 @@ function App() {
   };
 
   const [dadosSemana, setDadosSemana] = useState(null);
-
+  const [mostrarComparacao, setMostrarComparacao] = useState(false);
+  const [mostrarSoma, setMostrarSoma] = useState(false);
+  const [comparacao, setComparacao] = useState(null);
+  const [frase, setFrase] = useState(null);
   const [totalSemana1, setTotalSemana1] = useState(0);
   const [totalSemana2, setTotalSemana2] = useState(0);
 
@@ -52,6 +55,14 @@ function App() {
               setTotalSemana1={setTotalSemana1}
               totalSemana2={totalSemana2}
               setTotalSemana2={setTotalSemana2}
+              mostrarComparacao={mostrarComparacao}
+              setMostrarComparacao={setMostrarComparacao}
+              mostrarSoma={mostrarSoma}
+              setMostrarSoma={setMostrarSoma}
+              comparacao={comparacao}
+              setComparacao={setComparacao}
+              frase={frase}
+              setFrase={setFrase}
               />     
       <Footer />
     </>

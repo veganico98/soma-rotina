@@ -1,29 +1,30 @@
 
 import './Formulario.css'
 
-const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSemana, setDadosSemana, totalSemana1, setTotalSemana1, totalSemana2, setTotalSemana2}) => {
+const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSemana, setDadosSemana, totalSemana1, setTotalSemana1, totalSemana2, setTotalSemana2, mostrarComparacao, setMostrarComparacao, mostrarSoma, setMostrarSoma, comparacao, setComparacao, frase, setFrase}) => {
 
   function handleChange(e) {
-      const {name, value} = e.target;
-      setDados(prev => ({
-        ...prev,
-        [name]: Number(value)
+    const {name, value} = e.target;
+    setDados(prev => ({
+      ...prev,
+      [name]: Number(value)
     }))
   }
 
   const enviarDados = async () => {
+    const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dados)
+    });
 
-  const resposta = await fetch('http://127.0.0.1:8000/api/resultado', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(dados)
-  });
+    const json = await resposta.json();
+    console.log(json);
 
-  const json = await resposta.json();
-  console.log(json);
-
+    setMostrarComparacao(false);
+    setMostrarComparacao(false);
   };
 
   const gerarSoma = async () => {
@@ -38,17 +39,22 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
     if (!resposta.ok){
       throw new Error('Erro ao buscar soma');
     }
-      const soma = await resposta.json();
-      // console.log("Soma recebida: ", soma);
-      setResultadoSoma(soma);
+    
+    const soma = await resposta.json();
+    console.log("Soma recebida: ", soma);
+      
+    setResultadoSoma(soma);
+    setMostrarSoma(true);
+    setMostrarComparacao(false);
 
-      const exportWeek = await fetch('http://127.0.0.1:8000/api/resultado/exportWeek',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+
+    const exportWeek = await fetch('http://127.0.0.1:8000/api/resultado/exportWeek',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
         body: JSON.stringify({total_minutos: soma.total_minutos})
-      })
+    })
 
     } catch (error) {
       console.error('Erro ao gerar soma: ', error);
@@ -65,16 +71,43 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
       const semana1 = json.semana1?.[0]?.totalMinutos;
       const semana2 = json.semana2?.[0]?.totalMinutos;
 
+      const comparacao = semana2 - semana1;
+
       setTotalSemana1(semana1);
       setTotalSemana2(semana2);
+      setComparacao(comparacao);
+
+      setMostrarComparacao(true);
 
       console.log("Dados da semana:", json);
       console.log("Total Semana 1:", semana1);
       console.log("Total Semana 2:", semana2);
+
+      phrase();
+
+
       
     }catch (error) {
       console.error('Erro ao buscar dados da semana:', error);
     }
+  };
+
+  const phrase = async () => {
+    let message = '';
+
+    if (comparacao > 0) {
+      const resposta = await fetch('http://127.0.0.1:8000/api/resultado/congrats');
+      const json = await resposta.json();
+      message = (json.frase);
+      setFrase(message);
+    }else{
+      const resposta = await fetch('http://127.0.0.1:8000/api/resultado/congrats');
+      const json = await resposta.json();
+      message = (json.frase);
+      setFrase(message);
+    }
+    console.log("Frase recebida:", message);
+    return message;
   };
 
   return (
@@ -91,52 +124,65 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
               <input type='number' id='sunday' name="sunday" onChange={handleChange} value={dados.sunday} placeholder='Digite em minutos:' className='border border-indigo-700 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
 
               <label htmlFor='monday' className='day text-indigo-700 font-bold'>Segunda-feira</label>
-              <input type='number' id='monday' name="monday" onChange={handleChange} value={dados.monday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
+              <input type='number' id='monday' name="monday" onChange={handleChange} value={dados.monday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
               
               <label htmlFor='tuesday' className='day text-indigo-700 font-bold'>Terça-feira</label>
-              <input type='number' id='tuesday' name="tuesday" onChange={handleChange} value={dados.tuesday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
+              <input type='number' id='tuesday' name="tuesday" onChange={handleChange} value={dados.tuesday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
           
               <label htmlFor='wednesday' className='day text-indigo-700 font-bold'>Quarta-feira</label>
-              <input type='number' id='wednesday' name="wednesday" onChange={handleChange} value={dados.wednesday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
+              <input type='number' id='wednesday' name="wednesday" onChange={handleChange} value={dados.wednesday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
               
               <label htmlFor='thursday' className='day text-indigo-700 font-bold'>Quinta-feira</label>
-              <input type='number' id='thursday' name="thursday" onChange={handleChange} value={dados.thursday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
+              <input type='number' id='thursday' name="thursday" onChange={handleChange} value={dados.thursday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
               
               <label htmlFor='friday' className='day text-indigo-700 font-bold'>Sexta-feira</label>
-              <input type='number' id='friday' name="friday" onChange={handleChange} value={dados.friday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
+              <input type='number' id='friday' name="friday" onChange={handleChange} value={dados.friday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
                   
               <label htmlFor='saturday' className='day text-indigo-700 font-bold'>Sábado</label>
-              <input type='number' id='saturday' name="saturday" onChange={handleChange} value={dados.saturday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 p2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
+              <input type='number' id='saturday' name="saturday" onChange={handleChange} value={dados.saturday} placeholder='Digite em minutos:' className='border border-indigo-700 rounded-mb-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-700' />
               
-              <button type="button" onClick={enviarDados} className="bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
+              <div className='flex flex-col items-center gap-1 '>
+                <button type="button" onClick={enviarDados} className="w-85 bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
+                <p className='text-indigo-800 text-sm'>1º Envie os resultados. Clique em Enviar! ( ͡ಠ ͜ʖ ͡ಠ)</p>
+              </div>
 
-              <button type="button" onClick={() => {
-                gerarSoma(); 
-                buscarSemana();}} className='bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800'>Gerar soma</button>
+              <div className='flex flex-col items-center mt-1'>
+                <button type="button" onClick={gerarSoma} className="w-85 bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg text-white hover:from-indigo-600 hover:to-blue-800">Gerar soma</button>
+                <p className='text-indigo-800 text-sm'>2º Gere a soma. Clique em Gerar Soma! ( ಠ ͜ʖರೃ)</p>
+              </div>
+              
+            <div>
+              <button type="button" onClick={buscarSemana} className="w-85 bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg text-white hover:from-indigo-600 hover:to-blue-800">comparar</button>
+              <p className='text-indigo-800 text-sm'>3º Compare os resultados com sua semana passada. Clique em Comparar! (ง ͠° ͟ل͜ ͡°)ง</p>
+            </div>
+              
 
-              {resultadoSoma && resultadoSoma.total_minutos > 0 ? (
+            {mostrarSoma &&
+              resultadoSoma && resultadoSoma.total_minutos > 0 ? (
 
-                <div className='mt-4 p-4 bg-indigo-100 text-indigo-900 rounded shadow'>
+                <div className='mt-2 p-4 bg-indigo-100 text-indigo-900 rounded shadow'>
                   <p><strong>Total em minutos: </strong>{resultadoSoma.total_minutos}min</p>
                     <p className='flex flex-row'><strong>Horas: </strong>{resultadoSoma.horas} {resultadoSoma && resultadoSoma.minutos_restantes > 0 ? (
                       <span>:{resultadoSoma.minutos_restantes}min</span>
                         ) : (<span></span>)
                       }
                   </p>
-                  
-                  {totalSemana2 > totalSemana1 ? (
+                  {mostrarComparacao == true ? (
+                  totalSemana2 >= totalSemana1 ? (
                     <div className='mt-1 p-4 bg-emerald-200'>
-                      <p className='text-green-600'>{totalSemana2}{totalSemana1}</p>
+                      <p className='text-green-600'>{comparacao}min a mais. "{frase}"</p>
                     </div>
                   ) : (
                     <div className='mt-1 p-4 bg-red-200'>
-                      <p className='text-red-600'>{totalSemana2}{totalSemana1}</p>
+                      <p className='text-red-600'>{comparacao}min. "{frase}"</p>
                     </div>
+                  )) : (
+                    <p></p>
                   )}
 
                 </div>
               ) : (
-                  <div className=' flex items-center'>
+                  <div className=' flex items-center justify-center'>
                     <div className='mt-4 p-4'>
                       <p className=' text-indigo-900 shadow'>
                         Por favor, gere uma soma válida.

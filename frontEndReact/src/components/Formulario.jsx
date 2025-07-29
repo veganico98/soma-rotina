@@ -39,7 +39,7 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
       throw new Error('Erro ao buscar soma');
     }
       const soma = await resposta.json();
-      console.log("Soma recebida: ", soma);
+      // console.log("Soma recebida: ", soma);
       setResultadoSoma(soma);
 
       const exportWeek = await fetch('http://127.0.0.1:8000/api/resultado/exportWeek',{
@@ -53,19 +53,27 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
     } catch (error) {
       console.error('Erro ao gerar soma: ', error);
     }
+  };
 
-    const buscarSemana = async () => {
-      try {
-        const resposta = await fetch('http://127.0.0.1:8000/api/resultado/semana');
-        const json = await resposta.json();
+  const buscarSemana = async () => {
+    try {
+      const resposta = await fetch('http://127.0.0.1:8000/api/resultado/semana');
+      const json = await resposta.json();
 
-        setDadosSemana(json);
+      setDadosSemana(json);
 
-        const semana1 = json.semana1?.[0]?.total_minutos || 0;
-        const semana2 = json.semana2?.[0]?.total_minutos || 0;
-      }catch (error) {
-        console.error('Erro ao buscar dados da semana:', error);
-      }
+      const semana1 = json.semana1?.[0]?.totalMinutos;
+      const semana2 = json.semana2?.[0]?.totalMinutos;
+
+      setTotalSemana1(semana1);
+      setTotalSemana2(semana2);
+
+      console.log("Dados da semana:", json);
+      console.log("Total Semana 1:", semana1);
+      console.log("Total Semana 2:", semana2);
+      
+    }catch (error) {
+      console.error('Erro ao buscar dados da semana:', error);
     }
   };
 
@@ -102,7 +110,9 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
               
               <button type="button" onClick={enviarDados} className="bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
 
-              <button type="button" onClick={gerarSoma} className='bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800'>Gerar soma</button>
+              <button type="button" onClick={() => {
+                gerarSoma(); 
+                buscarSemana();}} className='bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg gap-20 text-white hover:from-indigo-600 hover:to-blue-800'>Gerar soma</button>
 
               {resultadoSoma && resultadoSoma.total_minutos > 0 ? (
 
@@ -113,6 +123,16 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
                         ) : (<span></span>)
                       }
                   </p>
+                  
+                  {totalSemana2 > totalSemana1 ? (
+                    <div className='mt-1 p-4 bg-emerald-200'>
+                      <p className='text-green-600'>{totalSemana2}{totalSemana1}</p>
+                    </div>
+                  ) : (
+                    <div className='mt-1 p-4 bg-red-200'>
+                      <p className='text-red-600'>{totalSemana2}{totalSemana1}</p>
+                    </div>
+                  )}
 
                 </div>
               ) : (

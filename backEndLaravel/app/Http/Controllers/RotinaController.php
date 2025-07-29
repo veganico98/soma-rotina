@@ -66,7 +66,7 @@ class RotinaController extends Controller{
             $conteudo = json_decode(file_get_contents($path), true);
         }
 
-        $conteudo['semana1'][0]['totalminutos'] = $conteudo['semana2'][0]['totalMinutos'] ?? "";
+        $conteudo['semana1'][0]['totalMinutos'] = $conteudo['semana2'][0]['totalMinutos'] ?? "";
 
         $conteudo['semana2'][0]['totalMinutos'] = $novoTotal;
 

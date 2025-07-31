@@ -1,7 +1,13 @@
-
+import { useEffect } from 'react';
 import './Formulario.css'
 
 const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSemana, setDadosSemana, totalSemana1, setTotalSemana1, totalSemana2, setTotalSemana2, mostrarComparacao, setMostrarComparacao, mostrarSoma, setMostrarSoma, comparacao, setComparacao, frase, setFrase, sendDays, setSendDays}) => {
+
+  useEffect(() => {
+    if (comparacao !== null){
+      phrase();
+    }
+  }, [comparacao]);
 
   function handleChange(e) {
     const {name, value} = e.target;
@@ -73,37 +79,33 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
       const semana1 = json.semana1?.[0]?.totalMinutos;
       const semana2 = json.semana2?.[0]?.totalMinutos;
 
-      const comparacao = semana2 - semana1;
-
       setTotalSemana1(semana1);
       setTotalSemana2(semana2);
-      setComparacao(comparacao);
-
+      setComparacao(semana2 - semana1);
       setMostrarComparacao(true);
 
-      console.log("Dados da semana:", json);
-      console.log("Total Semana 1:", semana1);
-      console.log("Total Semana 2:", semana2);
+      // console.log("comparação:", comparacao);
+      // console.log("Dados da semana:", json);
+      // console.log("Total Semana 1:", semana1);
+      // console.log("Total Semana 2:", semana2);
 
-      phrase();
-
-
-      
     }catch (error) {
       console.error('Erro ao buscar dados da semana:', error);
     }
   };
 
   const phrase = async () => {
+    // console.log("Comparação:", comparacao);
+    
     let message = '';
-
+    
     if (comparacao > 0) {
       const resposta = await fetch('http://127.0.0.1:8000/api/resultado/congrats');
       const json = await resposta.json();
       message = (json.frase);
       setFrase(message);
     }else{
-      const resposta = await fetch('http://127.0.0.1:8000/api/resultado/congrats');
+      const resposta = await fetch('http://127.0.0.1:8000/api/resultado/incentivo');
       const json = await resposta.json();
       message = (json.frase);
       setFrase(message);
@@ -146,9 +148,9 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
               <div className='flex flex-col items-center gap-1 '>
                 <button type="button" onClick={enviarDados} className="w-85 bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
                 <p className='text-indigo-800 text-sm'>{sendDays == true ? (
-                  <p>Dados enviados!</p>
+                  <span>Dados enviados!</span>
                 ):(
-                  <p>1º Envie os resultados. Clique em Enviar! ( ͡ಠ ͜ʖ ͡ಠ)</p>
+                  <span>1º Envie os resultados. Clique em Enviar! ( ͡ಠ ͜ʖ ͡ಠ)</span>
                 )}</p>
               </div>
 
@@ -183,7 +185,7 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
                       <p className='text-red-600'>{comparacao}min. "{frase}"</p>
                     </div>
                   )) : (
-                    <p></p>
+                    <span></span>
                   )}
 
                 </div>

@@ -1,7 +1,7 @@
 
 import './Formulario.css'
 
-const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSemana, setDadosSemana, totalSemana1, setTotalSemana1, totalSemana2, setTotalSemana2, mostrarComparacao, setMostrarComparacao, mostrarSoma, setMostrarSoma, comparacao, setComparacao, frase, setFrase}) => {
+const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSemana, setDadosSemana, totalSemana1, setTotalSemana1, totalSemana2, setTotalSemana2, mostrarComparacao, setMostrarComparacao, mostrarSoma, setMostrarSoma, comparacao, setComparacao, frase, setFrase, sendDays, setSendDays}) => {
 
   function handleChange(e) {
     const {name, value} = e.target;
@@ -25,6 +25,7 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
 
     setMostrarComparacao(false);
     setMostrarComparacao(false);
+    setSendDays(true);
   };
 
   const gerarSoma = async () => {
@@ -46,6 +47,7 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
     setResultadoSoma(soma);
     setMostrarSoma(true);
     setMostrarComparacao(false);
+    setSendDays(false);
 
 
     const exportWeek = await fetch('http://127.0.0.1:8000/api/resultado/exportWeek',{
@@ -111,7 +113,7 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
   };
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen '>
+    <div className='flex flex-col items-center justify-center h-screen mb-3'>
       
         <form className='flex flex-col'>
             <div className='flex flex-col gap-2 bg-white p-6 rounded-lg shadow-lg w-96'>        
@@ -143,7 +145,11 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
               
               <div className='flex flex-col items-center gap-1 '>
                 <button type="button" onClick={enviarDados} className="w-85 bg-gradient-to-bl from-indigo-500 to-indigo-700 rounded-r-lg text-white hover:from-indigo-600 hover:to-blue-800">Enviar</button>
-                <p className='text-indigo-800 text-sm'>1º Envie os resultados. Clique em Enviar! ( ͡ಠ ͜ʖ ͡ಠ)</p>
+                <p className='text-indigo-800 text-sm'>{sendDays == true ? (
+                  <p>Dados enviados!</p>
+                ):(
+                  <p>1º Envie os resultados. Clique em Enviar! ( ͡ಠ ͜ʖ ͡ಠ)</p>
+                )}</p>
               </div>
 
               <div className='flex flex-col items-center mt-1'>
@@ -169,11 +175,11 @@ const Formulario = ({dados, setDados, setResultadoSoma, resultadoSoma, dadosSema
                   </p>
                   {mostrarComparacao == true ? (
                   totalSemana2 >= totalSemana1 ? (
-                    <div className='mt-1 p-4 bg-emerald-200'>
+                    <div className='mt-1 p-4 bg-emerald-200 text-sm'>
                       <p className='text-green-600'>{comparacao}min a mais. "{frase}"</p>
                     </div>
                   ) : (
-                    <div className='mt-1 p-4 bg-red-200'>
+                    <div className='mt-1 p-4 bg-red-200 text-sm'>
                       <p className='text-red-600'>{comparacao}min. "{frase}"</p>
                     </div>
                   )) : (

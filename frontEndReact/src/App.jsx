@@ -32,13 +32,15 @@ function App() {
     saturday: 0
   };
 
-  const [dadosSemana, setDadosSemana] = useState(null);
   const [mostrarComparacao, setMostrarComparacao] = useState(false);
   const [mostrarSoma, setMostrarSoma] = useState(false);
+  const [sendDays, setSendDays] = useState(false);
+  const [dadosSemana, setDadosSemana] = useState(null);
   const [comparacao, setComparacao] = useState(null);
   const [frase, setFrase] = useState(null);
   const [totalSemana1, setTotalSemana1] = useState(0);
   const [totalSemana2, setTotalSemana2] = useState(0);
+
 
 
   return (
@@ -63,6 +65,8 @@ function App() {
               setComparacao={setComparacao}
               frase={frase}
               setFrase={setFrase}
+              sendDays={sendDays}
+              setSendDays={setSendDays}
               />     
       <Footer />
     </>
